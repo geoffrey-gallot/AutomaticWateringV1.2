@@ -7,6 +7,8 @@
 #include <DHT_U.h> // bibliotheque DHT22
 // #include <Adafruit_Sensor.h>
 
+#include <Adafruit_ESP8266.h>
+
 // configuration du capteur DHT22
 #define DHTPIN A2     // initialise l'entre analogique
 #define DHTTYPE DHT22 // defini le type de capteur
@@ -114,6 +116,8 @@ void setup()
   digitalWrite(blue, LOW);
   digitalWrite(red, LOW);
   digitalWrite(green, LOW);
+
+  //setup ESP8266
 }
 
 void loop()
