@@ -7,6 +7,8 @@
 #include <DHT_U.h> // bibliotheque DHT22
 // #include <Adafruit_Sensor.h>
 
+#include <Adafruit_ESP8266.h>
+
 // configuration du capteur DHT22
 #define DHTPIN A2     // initialise l'entre analogique
 #define DHTTYPE DHT22 // defini le type de capteur
@@ -25,7 +27,7 @@ int green = 10;
 // definition de la pompe
 int pompe = 13;
 
-void manualWatering()
+void manualWateringInterrupt()
 {
   // temoin lumineux arrosage en cours
   digitalWrite(green, HIGH);
@@ -105,7 +107,7 @@ void setup()
   lcd.print("Arrosage Auto");
 
   // interruption pour arrosage manuel
-  attachInterrupt(0, manualWatering, CHANGE);
+  attachInterrupt(0, manualWateringInterrupt, CHANGE);
   // initialisation de la sortie du relais
   pinMode(pompe, OUTPUT);
 
@@ -114,19 +116,26 @@ void setup()
   digitalWrite(blue, LOW);
   digitalWrite(red, LOW);
   digitalWrite(green, LOW);
+
+  //setup ESP8266
+}
+
+void manualWatering()
+{
+  digitalWrite(green, HIGH);
+  // declenchement du relais de la pompe
+  digitalWrite(pompe, LOW);
+  // arrosage 10 s
+  delay(10000);
+  digitalWrite(pompe, HIGH);
+  digitalWrite(green, LOW);
 }
 
 void loop()
 {
-  if (digitalRead(green)==HIGH)
+  if (digitalRead(green) == HIGH)
   {
-    digitalWrite(green, HIGH);
-    // declenchement du relais de la pompe
-    digitalWrite(pompe, LOW);
-    // arrosage 10 s
-    delay(10000);
-    digitalWrite(pompe, HIGH);
-    digitalWrite(green, LOW);
+    manualWatering();
   }
 
   // on recupere la temperature de l'air
